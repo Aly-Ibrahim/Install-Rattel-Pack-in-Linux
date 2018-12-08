@@ -1,0 +1,97 @@
+
+Source  https://rattle.togaware.com/rattle-install-ubuntu.html
+ 
+Data Mining
+One Page R
+Rattle
+GNU/Linux
+Android
+LaTeX
+Services
+About
+[AusDM]
+[PAKDD]
+  togaware   /   rattle install ubuntu
+
+Rattle: Installation on Ubuntu GNU/Linux
+
+The Ubuntu distribution of GNU/Linux is polished, easy to install, freely available, widely used, and one of the most popular virtual machine operating system in the cloud. It is recommended to the Data Scientist as the platform for analyzing big data. It can be installed on most computers, new and old, as well as on specific tablets and smartphones. It can replace your current operating system (Windows or OSX) or else it can be installed within a VirtualBox on any platform, all for free. If installing within a VirtualBox then enable the VirtualBox guest additions and bidirectional cut/paste.
+
+After installing Ubuntu on your computer, install the wajig package manager.
+
+$ sudo apt-get install wajig
+1. Add CRAN and C2D4U Repositories
+We first add the appropriate CRAN repository and then the C2D4U repository to our workstation. The C2D4U repository is a collection of CRAN packages automatically converted to Debian packages specifically for Ubuntu (maintained by Michael Rutter).
+
+From the command line (and we can also do this through the Software Centre GUI) we first add the CRAN repository.
+
+$ gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9
+$ gpg -a --export E084DAB9 | sudo apt-key add -
+$ sudo add-apt-repository 'deb http://cloud.r-project.org/bin/linux/ubuntu artful/'
+Notice that the archives are signed to ensure their integrity. We add the signatures to our system as above. We should only do so for sites we trust.
+
+Now we add the repository that is maintained to contain nearly every R package from CRAN and is updated daily.
+
+$ wajig addrepo ppa:marutter/rrutter3.5
+$ wajig addrepo ppa:marutter/c2d4u3.5
+We should then refresh our local cache of the repositories and upgrade all packages.
+
+$ wajig update
+$ wajig distupgrade
+Install a package to support the GUI application.
+
+$ wajig install libgtk2.0-dev
+We can then install the r-recommended and r-base-dev packages, which will also pull in a number of other packages.
+
+$ wajig update
+$ wajig install-suggested r-recommended
+$ wajig install-suggested r-base-dev
+We install the dev version so we can install other packages from source, if needed.
+
+This will install the latest version of R.
+
+2. Install Rattle and Friends
+We now install Rattle and other CRAN packages.
+
+$ wajig install r-cran-rattle
+Other packages to install might include:
+ $ wajig install \
+    r-cran-ada r-cran-amap r-cran-amelia \
+    r-cran-arules r-cran-biclust r-cran-cairodevice \
+    r-cran-cba \
+    r-cran-circstats r-cran-cluster r-cran-colorspace r-cran-corrplot \
+    r-cran-doby r-cran-plyr r-cran-dtw r-cran-e1071 \
+    r-cran-fbasics r-cran-fields r-cran-flexmix r-cran-foreign \
+    r-cran-gam r-cran-ggplot2 r-cran-gplots r-cran-gridextra \
+    r-cran-hmisc r-cran-igraph r-cran-kernlab r-cran-knitr r-cran-lattice \
+    r-cran-latticeextra r-cran-lubridate r-cran-matrix r-cran-mclust r-cran-mice \
+    r-cran-nnet r-cran-party r-cran-playwith r-cran-plyr \
+    r-cran-randomforest r-cran-rcolorbrewer r-cran-rcurl r-cran-reshape2 \
+    r-cran-rggobi r-cran-rocr r-cran-rodbc r-cran-rpart r-cran-rpart.plot \
+    r-cran-scatterplot3d r-cran-seriation r-cran-tm \
+    r-cran-vcd r-cran-waveslim r-cran-wordcloud r-cran-xlsx \
+    r-cran-xlsxjars r-cran-xml r-cran-xtable \
+    r-cran-curl r-cran-openssl r-cran-r6 r-cran-dbi r-cran-httr \
+    r-cran-jsonlite r-cran-base64enc \
+    r-cran-htmlwidgets r-cran-tidyr r-cran-dplyr r-cran-hexbin \
+    r-cran-purrr r-cran-plotly r-cran-dt r-cran-clv \
+    r-bioc-biocgenerics r-bioc-biocinstaller r-bioc-graph r-bioc-rbgl \
+    r-bioc-rgraphviz
+The following don't have c2d4u packages yet:
+
+$ R
+> install.packages(c("pmml", "arulesViz", "descr", "ggdendro",
+                     "hmeasure", "RGtk2Extras", "verification", "wskm"))
+The following comes from the Bioconductor archive:
+
+ > library(BiocInstaller); biocLite("pkgDepTools")
+We can then run Rattle:
+$ R
+> library(rattle)
+> rattle()
+To update to the latest development version of Rattle:
+ > install.packages("rattle", repos="http://rattle.togaware.com")
+Currently, Rattle will use R's install.packages to install missing packages. They get installed into the local library (/usr/local/lib/R/site-library) if you have write access there, or else into the user's library (~/R). The C2D4U packages install into the sytem library (/usr/lib/R/site-library). The user's libraries override the local libraries which override the system libraries. Thus packages installed locally using install.packages will override packages installed using wajig. This can be a source of confusion, when we think we have installed a later version than R is loading. Use remove.packages to remove the local R installed packages.
+
+For trouble shooting see Rattle Install Trouble Shooting.
+
